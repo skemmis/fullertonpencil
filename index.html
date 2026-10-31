@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<title>Fullerton Pencil</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Fullerton is an American pencil company founded in 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Jost:wght@400;500&display=swap">
+<style>
+/* Layout: photo-led. Large images carry each page; text is limited to the brand blurb and labels. */
+:root {
+  --paper: #FAF6EE;
+  --surface: #F1EBDD;
+  --ink: #0B2A1C;
+  --ink-soft: #4A5C52;
+  --rule: #DCD4C3;
+  --accent: #C9A227;     /* pencil yellow, used sparingly */
+  --on-ink: #F3EDE0;
+  --band: #0B2A1C;
+  --focus: #C9A227;
+
+  --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans: "Jost", "Avenir Next", "Futura", "Segoe UI", system-ui, sans-serif;
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem);
+  --step-4: clamp(2.4rem, 1.6rem + 3.6vw, 4.25rem);
+
+  --wrap: 1200px;
+  --header-h: 72px;
+  --ease: cubic-bezier(.2, .7, .1, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1A13; --surface: #13241B; --ink: #EDE6D6; --ink-soft: #A9B5AC; --rule: #24382D;
+    --accent: #E0BC45; --on-ink: #EDE6D6; --band: #081109; --focus: #E0BC45; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1A13; --surface: #13241B; --ink: #EDE6D6; --ink-soft: #A9B5AC; --rule: #24382D;
+  --accent: #E0BC45; --on-ink: #EDE6D6; --band: #081109; --focus: #E0BC45; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--paper);
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: -0.01em; font-variation-settings: "opsz" 144; }
+p { margin: 0; text-wrap: pretty; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--ink); color: var(--paper); }
+
+.wrap {
+  max-width: calc(var(--wrap) + 2 * 32px);
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px), min(32px, 4vw));
+  padding-right: max(16px, env(safe-area-inset-right, 0px), min(32px, 4vw));
+}
+.label {
+  font-size: var(--step--1); font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-soft);
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: saturate(1.2) blur(14px);
+  -webkit-backdrop-filter: saturate(1.2) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s;
+}
+.site-header.scrolled { border-bottom-color: var(--rule); }
+.site-header .wrap { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.logo {
+  display: block; width: clamp(128px, 16vw, 168px); aspect-ratio: 826 / 196;
+  background: var(--ink);
+  -webkit-mask: url("assets/logo-green.png") center / contain no-repeat;
+  mask: url("assets/logo-green.png") center / contain no-repeat;
+}
+.nav { display: flex; align-items: center; gap: clamp(14px, 3vw, 36px); font-size: 0.9375rem; }
+.nav a { text-decoration: none; position: relative; padding-block: 6px; color: var(--ink-soft); transition: color .25s; }
+.nav a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--ink);
+  transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease);
+}
+.nav a:hover, .nav a[aria-current="page"] { color: var(--ink); }
+.nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
+.nav .nav-order { border: 1px solid var(--ink); border-radius: 999px; padding: 7px 18px; color: var(--ink); transition: background .25s, color .25s; }
+.nav .nav-order::after { display: none; }
+.nav .nav-order:hover, .nav .nav-order[aria-current="page"] { background: var(--ink); color: var(--paper); }
+@media (max-width: 480px) {
+  .nav { font-size: 0.875rem; gap: 12px; }
+  .nav .nav-order { padding: 6px 12px; }
+}
+
+/* ---------- Views & motion ---------- */
+.view[hidden] { display: none !important; }
+.view.entering .rise { animation: rise .9s var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* Photos: a soft wipe-and-settle on entry, slow zoom on hover */
+.photo { position: relative; overflow: hidden; background: var(--surface); border-radius: 2px; margin: 0; }
+.photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+.photo.hover:hover img { transform: scale(1.035); }
+.view.entering .photo.reveal { animation: wipe 1.3s var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms); }
+.view.entering .photo.reveal img { animation: settle 1.8s var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms); }
+@keyframes wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes settle { from { transform: scale(1.12); } to { transform: scale(1); } }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; font: 500 0.9375rem/1 var(--sans); letter-spacing: 0.02em;
+  padding: 15px 26px; border-radius: 999px; border: 1px solid var(--ink); cursor: pointer; text-decoration: none;
+  background: var(--ink); color: var(--paper); position: relative; overflow: hidden; isolation: isolate;
+  transition: color .35s var(--ease), transform .2s;
+}
+.btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent); transform: translateY(101%); transition: transform .45s var(--ease); }
+.btn:hover { color: #1B1A12; }
+.btn:hover::before { transform: none; }
+.btn:active { transform: scale(.98); }
+.btn .arrow { transition: transform .35s var(--ease); }
+.btn:hover .arrow { transform: translateX(4px); }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.btn[disabled]::before { display: none; }
+
+/* ---------- Home ---------- */
+.hero { padding-block: clamp(20px, 3vw, 32px) 0; }
+.hero .photo { aspect-ratio: 16 / 8; }
+.hero-caption { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px 48px; padding-block: clamp(28px, 4vw, 48px) 0; }
+.hero-caption h1 { font-size: var(--step-4); max-width: 13ch; }
+@media (max-width: 640px) { .hero .photo { aspect-ratio: 4 / 3; } }
+
+section.block { padding-block: clamp(64px, 9vw, 120px) 0; }
+
+
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+.pair .photo { aspect-ratio: 4 / 3; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+
+.feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: center; }
+.feature .photo { aspect-ratio: 4 / 3; }
+.feature h2 { font-size: var(--step-3); margin-block: 16px 32px; }
+@media (max-width: 720px) { .feature { grid-template-columns: 1fr; } }
+
+.wide { aspect-ratio: 16 / 7; }
+@media (max-width: 640px) { .wide { aspect-ratio: 4 / 3; } }
+
+/* ---------- Page heads ---------- */
+.page-head { padding-block: clamp(48px, 7vw, 88px) clamp(28px, 4vw, 44px); }
+.page-head h1 { font-size: var(--step-4); }
+
+/* About */
+.about-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: start; padding-bottom: clamp(48px, 7vw, 96px); }
+.about-body .photo { aspect-ratio: 4 / 3; }
+.about-body p { font-family: var(--display); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.125rem); line-height: 1.34; font-weight: 300; font-variation-settings: "opsz" 72; }
+.about-text { display: grid; gap: 32px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--header-h) + 40px); }
+@media (max-width: 720px) { .about-body { grid-template-columns: 1fr; } .about-text { position: static; } }
+
+/* Contact */
+.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(40px, 7vw, 96px); padding-block: clamp(8px, 2vw, 24px) clamp(64px, 9vw, 112px); }
+.channels { display: grid; align-content: start; border-top: 1px solid var(--rule); }
+.channel { display: grid; gap: 6px; padding-block: 20px; border-bottom: 1px solid var(--rule); }
+.channel .row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.channel .addr { font-family: var(--display); font-size: var(--step-1); user-select: all; overflow-wrap: anywhere; }
+.copy { border: 0; background: none; padding: 4px 0; cursor: pointer; font: 500 0.8125rem var(--sans); letter-spacing: .08em; color: var(--ink-soft); text-transform: uppercase; }
+.copy:hover { color: var(--ink); }
+
+form.fp { display: grid; gap: 22px; }
+.field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+.field { display: grid; gap: 8px; min-width: 0; }
+.field label { font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.field input, .field select, .field textarea {
+  font: inherit; color: var(--ink); background: transparent; width: 100%;
+  border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; padding: 10px 0 12px;
+  transition: border-color .3s; appearance: none; -webkit-appearance: none;
+}
+.field select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%), linear-gradient(-45deg, transparent 50%, var(--ink-soft) 50%);
+  background-position: calc(100% - 10px) 52%, calc(100% - 5px) 52%; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.field select option { color: #111; background: #fff; }
+.field textarea { resize: vertical; min-height: 140px; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-bottom-color: var(--ink); }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { box-shadow: 0 1px 0 0 var(--ink); }
+.field .err { font-size: 0.8125rem; color: #B4532A; min-height: 1em; }
+.form-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 8px; }
+.form-foot small { color: var(--ink-soft); font-size: 0.8125rem; }
+
+.confirm { border: 1px solid var(--rule); background: var(--surface); border-radius: 4px; padding: clamp(24px, 4vw, 40px); display: grid; gap: 14px; align-content: start; }
+.confirm h3 { font-size: var(--step-2); }
+.confirm p { color: var(--ink-soft); }
+.check { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--ink); display: grid; place-items: center; }
+.check path { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 30; stroke-dashoffset: 30; animation: tick .7s var(--ease) .15s forwards; }
+@keyframes tick { to { stroke-dashoffset: 0; } }
+
+/* Order (coming soon) */
+.soon { display: grid; gap: 18px; }
+.soon h1 { font-size: clamp(3rem, 1.8rem + 6vw, 7rem); }
+.order-hero { aspect-ratio: 3 / 2; max-width: 900px; }
+@media (max-width: 640px) { .order-hero { aspect-ratio: 4 / 3; } }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--band); color: var(--on-ink); margin-top: clamp(64px, 9vw, 120px); }
+.site-footer .wrap { padding-block: clamp(48px, 7vw, 80px) 32px; display: grid; gap: 48px; }
+.foot-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 32px; }
+.foot-logo { width: min(300px, 70vw); aspect-ratio: 826 / 196; background: var(--on-ink); -webkit-mask: url("assets/logo-green.png") center / contain no-repeat; mask: url("assets/logo-green.png") center / contain no-repeat; }
+.foot-nav { display: flex; flex-wrap: wrap; gap: 12px 32px; font-size: 0.9375rem; }
+.foot-nav a { text-decoration: none; opacity: .8; transition: opacity .2s; }
+.foot-nav a:hover { opacity: 1; }
+.foot-bottom { font-size: 0.8125rem; opacity: .65; border-top: 1px solid color-mix(in srgb, var(--on-ink) 18%, transparent); padding-top: 24px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0ms !important; transition-duration: .001ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="#home" data-link="home" aria-label="Fullerton Pencils, home"><span class="logo" role="img" aria-label="Fullerton Pencils"></span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#about" data-link="about">About</a>
+      <a href="#contact" data-link="contact">Contact</a>
+      <a href="#order" data-link="order" class="nav-order">Order</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= HOME ================= -->
+  <div class="view" data-view="home">
+    <section class="hero wrap">
+      <figure class="photo reveal" style="--i:0"><img src="assets/photos/hero.jpg" alt="A yellow Fullerton No. 2 HB pencil" fetchpriority="high"></figure>
+      <div class="hero-caption">
+        <h1 class="rise" style="--i:2">The importance of a good pencil.</h1>
+        <a class="btn rise" style="--i:3" href="#order" data-link="order">Order <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <section class="block wrap pair">
+      <figure class="photo hover a"><img src="assets/photos/tip.jpg" alt="Six Fullerton No. 2 pencils with a sharpener" loading="lazy"></figure>
+      <figure class="photo hover b"><img src="assets/photos/desk.jpg" alt="A Fullerton pencil on a notebook" loading="lazy"></figure>
+    </section>
+
+    <section class="block wrap feature">
+      <figure class="photo hover"><img src="assets/photos/box.jpg" alt="A box of twelve Fullerton pencils" loading="lazy"></figure>
+      <div>
+        <span class="label">No. 2 HB</span>
+        <h2>Box of 12</h2>
+        <a class="btn" href="#order" data-link="order">Order <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= ABOUT ================= -->
+  <div class="view" data-view="about" hidden>
+    <section class="page-head wrap">
+      <h1 class="rise" style="--i:0">About</h1>
+    </section>
+    <section class="wrap">
+      <figure class="photo reveal wide" style="--i:1"><img src="assets/photos/stamp.jpg" alt="The Fullerton wordmark stamped on a yellow pencil"></figure>
+    </section>
+    <section class="block wrap about-body">
+      <div class="about-text">
+        <span class="label">Est. 2026</span>
+        <p>Fullerton is an American pencil company founded in 2026. We believe in quality materials, timeless design, and the importance of a good pencil. We make pencils for writing, drawing, and other purposes.</p>
+      </div>
+      <figure class="photo hover"><img src="assets/photos/desk.jpg" alt="A Fullerton pencil on a notebook" loading="lazy"></figure>
+    </section>
+  </div>
+
+  <!-- ================= CONTACT ================= -->
+  <div class="view" data-view="contact" hidden>
+    <section class="page-head wrap">
+      <h1 class="rise" style="--i:0">Contact</h1>
+    </section>
+    <section class="wrap contact-grid">
+      <div class="channels rise" style="--i:1">
+        <div class="channel">
+          <span class="label">General</span>
+          <div class="row"><span class="addr">hello@fullertonpencils.com</span><button class="copy" type="button" data-copy="hello@fullertonpencils.com">Copy</button></div>
+        </div>
+        <div class="channel">
+          <span class="label">Orders</span>
+          <div class="row"><span class="addr">orders@fullertonpencils.com</span><button class="copy" type="button" data-copy="orders@fullertonpencils.com">Copy</button></div>
+        </div>
+        <div class="channel">
+          <span class="label">Support</span>
+          <div class="row"><span class="addr">support@fullertonpencils.com</span><button class="copy" type="button" data-copy="support@fullertonpencils.com">Copy</button></div>
+        </div>
+      </div>
+      <div class="rise" style="--i:2" id="contact-slot">
+        <form class="fp" id="contact-form" novalidate>
+          <div class="field-row">
+            <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" autocomplete="name" required><span class="err" data-for="c-name"></span></div>
+            <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required><span class="err" data-for="c-email"></span></div>
+          </div>
+          <div class="field">
+            <label for="c-topic">Topic</label>
+            <select id="c-topic" name="topic">
+              <option>General</option>
+              <option>Orders</option>
+              <option>Support</option>
+            </select>
+          </div>
+          <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required></textarea><span class="err" data-for="c-msg"></span></div>
+          <div class="form-foot">
+            <small>Preview site. Messages are not sent.</small>
+            <button class="btn" type="submit">Send <span class="arrow" aria-hidden="true">→</span></button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= ORDER ================= -->
+  <div class="view" data-view="order" hidden>
+    <section class="page-head wrap soon">
+      <span class="label rise" style="--i:0">Order · No. 2 HB</span>
+      <h1 class="rise" style="--i:1">Coming soon</h1>
+    </section>
+    <section class="wrap">
+      <figure class="photo reveal order-hero" style="--i:2"><img src="assets/photos/box.jpg" alt="A box of twelve Fullerton No. 2 pencils"></figure>
+    </section>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <span class="foot-logo" role="img" aria-label="Fullerton Pencils"></span>
+      <nav class="foot-nav" aria-label="Footer">
+        <a href="#about" data-link="about">About</a>
+        <a href="#contact" data-link="contact">Contact</a>
+        <a href="#order" data-link="order">Order</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">© 2026 Fullerton Pencil Company</div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  /* ---------- Contact form ---------- */
+  const validate = form => {
+    let ok = true;
+    form.querySelectorAll("[required]").forEach(el => {
+      const err = form.querySelector(`.err[data-for="${el.id}"]`);
+      let msg = "";
+      if (!el.value.trim()) msg = "Required";
+      else if (el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value)) msg = "Check the email address";
+      if (err) err.textContent = msg;
+      if (msg && ok) { el.focus(); ok = false; }
+    });
+    return ok;
+  };
+  const checkSVG = `<span class="check" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M4 10.5 L8.5 15 L16 5.5"/></svg></span>`;
+  document.getElementById("contact-form").addEventListener("submit", e => {
+    e.preventDefault();
+    if (!validate(e.target)) return;
+    document.getElementById("contact-slot").innerHTML = `
+      <div class="confirm" role="status">${checkSVG}<h3>Thank you.</h3><p>Preview site. Your message was not sent.</p></div>`;
+  });
+
+  document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => {
+    const done = t => { b.textContent = t; setTimeout(() => b.textContent = "Copy", 1600); };
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents(b.previousElementSibling);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+    };
+    try { navigator.clipboard.writeText(b.dataset.copy).then(() => done("Copied"), fallback); } catch { fallback(); }
+  }));
+
+  /* ---------- Views ---------- */
+  const views = [...document.querySelectorAll(".view")];
+  const names = views.map(v => v.dataset.view);
+  const show = (name, { scroll = true } = {}) => {
+    if (!names.includes(name)) name = "home";
+    views.forEach(v => {
+      const on = v.dataset.view === name;
+      v.hidden = !on;
+      v.classList.remove("entering");
+      if (on) { void v.offsetWidth; v.classList.add("entering"); }
+    });
+    document.querySelectorAll(".nav [data-link]").forEach(a =>
+      a.dataset.link === name ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+    document.title = name === "home" ? "Fullerton Pencil" : `${name[0].toUpperCase() + name.slice(1)} · Fullerton Pencil`;
+    if (scroll) window.scrollTo({ top: 0, behavior: "instant" });
+    try { history.replaceState(null, "", "#" + name); } catch {}
+  };
+  document.addEventListener("click", e => {
+    const a = e.target.closest("[data-link]"); if (!a) return;
+    e.preventDefault();
+    show(a.dataset.link);
+  });
+  addEventListener("hashchange", () => show(location.hash.slice(1)));
+  show(location.hash.slice(1) || "home", { scroll: false });
+
+  const header = document.querySelector(".site-header");
+  const onScroll = () => header.classList.toggle("scrolled", scrollY > 8);
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+})();
+</script>
+</body>
+</html>
